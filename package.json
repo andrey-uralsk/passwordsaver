@@ -1,0 +1,26 @@
+{
+  "name": "passwordsaver",
+  "version": "1.0.0",
+  "description": "app for saving pasword",
+  "main": "server-app/index.js",
+  "scripts": {
+    "watch-server": "cross-env NODE_ENV=development nodemon --watch \"src/**/*\" -e ts,tsx --exec \"ts-node\" ./src/server-app/server.ts",
+    "build-server": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andrey Karnaukhov",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.3.0",
+    "koa-router": "^7.2.1"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.0.39",
+    "@types/koa-router": "^7.0.23",
+    "cross-env": "^5.1.1",
+    "nodemon": "^1.12.1",
+    "ts-node": "^3.3.0",
+    "tsc": "^1.20150623.0",
+    "typescript": "^2.6.1"
+  }
+}
