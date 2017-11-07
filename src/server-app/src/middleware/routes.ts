@@ -1,8 +1,12 @@
 import * as Router from 'koa-router';
+import {projectsRoutes} from "../routes/projects";
 import {getManager} from "typeorm";
 import {User} from "../db/entity/User";
+import {passwordsRoutes} from "../routes/passwords";
 
 const router = new Router();
+router.use(projectsRoutes);
+router.use(passwordsRoutes);
 
 router.get('/', async (ctx) => {
     ctx.body = 'Hello world!';

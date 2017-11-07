@@ -5,7 +5,7 @@ interface ILogData {
     method: string;
     url: string;
     query: string;
-    remoteAdres: string;
+    remoteAddress: string;
     host: string;
     userAgent: string;
     statusCode: number;
@@ -37,7 +37,7 @@ export async function logger(ctx: Koa.Context, next: () => Promise<any>) {
         method: ctx.method,
         url: ctx.url,
         query: ctx.query,
-        remoteAdres: ctx.request.ip,
+        remoteAddress: ctx.request.ip,
         host: ctx.header['host'],
         userAgent: ctx.header['user-agent']
     };
