@@ -6,7 +6,7 @@ import { config } from "./src/config/config";
 import { routes } from './src/middleware/routes';
 import { logger } from "./src/middleware/logger";
 
-createConnection().then(async () => {
+createConnection(config.dbConnection).then(async () => {
     const app = new Koa();
     app.use(bodyParser());
     app.use(logger);

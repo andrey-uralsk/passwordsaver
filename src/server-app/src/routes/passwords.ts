@@ -21,7 +21,7 @@ router.get(PASSWORDS_URL, async (ctx) => {
 router.get(`${PASSWORDS_URL}/:projectId`, async (ctx) => {
     try {
         const passwordRepository = getManager().getRepository(Password);
-        const passwords = await passwordRepository.findOneById(ctx.params.projectId);
+        const passwords = await passwordRepository.find({project: ctx.params.projectId});
         if (passwords) {
             ctx.body = {
                 status: 'success',
