@@ -1,14 +1,13 @@
 import * as Router from 'koa-router';
-import {getManager, getRepository} from "typeorm";
-import {Project} from "../db/entity/Project";
+import {ProjectService} from "../services/ProjectService";
 
 const router = new Router();
 const PROJECTS_URL = `/api/projects`;
 
 router.get(PROJECTS_URL, async (ctx) => {
     try {
-        const projectRepository = getManager().getRepository(Project);
-        const projects = await projectRepository.find();
+        const projectService = new ProjectService();
+        const projects = await projectService.getAllProjects();
         ctx.body = {
             status: 'success',
             data: projects
@@ -20,8 +19,8 @@ router.get(PROJECTS_URL, async (ctx) => {
 
 router.get(`${PROJECTS_URL}/:id`, async (ctx) => {
     try {
-        const projectRepository = getManager().getRepository(Project);
-        const project = await projectRepository.findOneById(ctx.params.id);
+        const projectService = new ProjectService();
+        const project = await projectService.getProjectById(ctx.params.id);
         if (project) {
             ctx.body = {
                 status: 'success',
@@ -41,15 +40,13 @@ router.get(`${PROJECTS_URL}/:id`, async (ctx) => {
 
 router.post(PROJECTS_URL, async (ctx) => {
     try {
-        const projectRepository = getManager().getRepository(Project);
-        console.log(ctx.request.body);
-        const newProject = projectRepository.create(ctx.request.body);
-        const saveProject = await projectRepository.save(newProject);
-        if(saveProject) {
+        const projectService = new ProjectService();
+        const newProject = projectService.addProject(ctx.request.body);
+        if(newProject) {
             ctx.status = 201;
             ctx.body = {
                 status: 'success',
-                data: saveProject
+                data: newProject
             }
         } else {
             ctx.status = 400;
@@ -69,15 +66,13 @@ router.post(PROJECTS_URL, async (ctx) => {
 
 router.put(`${PROJECTS_URL}/:id`, async (ctx) => {
     try {
-        const projectRepository = getManager().getRepository(Project);
-        let updateProject = await projectRepository.findOneById(ctx.params.id);
-        updateProject = Object.assign(updateProject, ctx.request.body);
-        const saveProject = await projectRepository.save(updateProject);
-        if(saveProject) {
+        const projectService = new ProjectService();
+        const updateProject = await projectService.updateProject(ctx.params.id, ctx.request.body);
+        if(updateProject) {
             ctx.status = 200;
             ctx.body = {
                 status: 'success',
-                data: saveProject
+                data: updateProject
             }
         } else {
             ctx.status = 400;
@@ -97,9 +92,8 @@ router.put(`${PROJECTS_URL}/:id`, async (ctx) => {
 
 router.delete(`${PROJECTS_URL}/:id`, async (ctx) => {
     try {
-        const projectRepository = getManager().getRepository(Project);
-        const deleteProject = await projectRepository.findOneById(ctx.params.id);
-        const deletedProject = await projectRepository.remove(deleteProject);
+        const projectService = new ProjectService();
+        const deletedProject = await projectService.deleteProject(ctx.params.id);
         if(deletedProject) {
             ctx.status = 200;
             ctx.body = {

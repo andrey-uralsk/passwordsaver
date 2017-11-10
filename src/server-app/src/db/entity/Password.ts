@@ -14,6 +14,9 @@ export class Password {
     @Column()
     password: string;
 
+    @Column({type: "text", nullable: true})
+    description: string;
+
     @ManyToOne(type => Project, project => project.passwords)
     project: Project;
 

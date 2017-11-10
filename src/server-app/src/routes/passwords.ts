@@ -1,14 +1,13 @@
 import * as Router from 'koa-router';
-import {getManager, getRepository} from "typeorm";
-import {Password} from "../db/entity/Password";
+import {PasswordService} from "../services/PasswordService";
 
 const router = new Router();
 const PASSWORDS_URL = `/api/passwords`;
 
 router.get(PASSWORDS_URL, async (ctx) => {
     try {
-        const passwordRepository = getManager().getRepository(Password);
-        const passwords = await passwordRepository.find();
+        const passwordService = new PasswordService();
+        const passwords = await passwordService.getAllPasswords();
         ctx.body = {
             status: 'success',
             data: passwords
@@ -20,8 +19,8 @@ router.get(PASSWORDS_URL, async (ctx) => {
 
 router.get(`${PASSWORDS_URL}/:projectId`, async (ctx) => {
     try {
-        const passwordRepository = getManager().getRepository(Password);
-        const passwords = await passwordRepository.find({project: ctx.params.projectId});
+        const passwordService = new PasswordService();
+        const passwords = await passwordService.getPasswordsByProjectId(ctx.params.projectId);
         if (passwords) {
             ctx.body = {
                 status: 'success',
@@ -41,14 +40,13 @@ router.get(`${PASSWORDS_URL}/:projectId`, async (ctx) => {
 
 router.post(PASSWORDS_URL, async (ctx) => {
     try {
-        const passwordRepository = getManager().getRepository(Password);
-        const newPassword = passwordRepository.create(ctx.request.body);
-        const savePassword = await passwordRepository.save(newPassword);
-        if(savePassword) {
+        const passwordService = new PasswordService();
+        const newPassword = passwordService.addPassword(ctx.request.body);
+        if(newPassword) {
             ctx.status = 201;
             ctx.body = {
                 status: 'success',
-                data: savePassword
+                data: newPassword
             }
         } else {
             ctx.status = 400;
@@ -68,15 +66,13 @@ router.post(PASSWORDS_URL, async (ctx) => {
 
 router.put(`${PASSWORDS_URL}/:id`, async (ctx) => {
     try {
-        const passwordRepository = getManager().getRepository(Password);
-        let updatePassword = await passwordRepository.findOneById(ctx.params.id);
-        updatePassword = Object.assign(updatePassword, ctx.request.body);
-        const savePassword = await passwordRepository.save(updatePassword);
-        if(savePassword) {
+        const passwordService = new PasswordService();
+        let updatePassword = await passwordService.updatePassword(ctx.params.id, ctx.request.body);
+        if(updatePassword) {
             ctx.status = 200;
             ctx.body = {
                 status: 'success',
-                data: savePassword
+                data: updatePassword
             }
         } else {
             ctx.status = 400;
@@ -96,9 +92,8 @@ router.put(`${PASSWORDS_URL}/:id`, async (ctx) => {
 
 router.delete(`${PASSWORDS_URL}/:id`, async (ctx) => {
     try {
-        const passwordRepository = getManager().getRepository(Password);
-        const deletePassword = await passwordRepository.findOneById(ctx.params.id);
-        const deletedPassword = await passwordRepository.remove(deletePassword);
+        const passwordService = new PasswordService();
+        const deletedPassword = await passwordService.deletePassword(ctx.params.id);
         if(deletedPassword) {
             ctx.status = 200;
             ctx.body = {
