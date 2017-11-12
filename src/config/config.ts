@@ -19,18 +19,18 @@ const config: IConfig = {
         synchronize: true,
         logging: true,
         entities: [
-            "./src/server-app/src/db/entity/**/*.ts"
+            "./src/db/entity/**/*.ts"
         ],
         migrations: [
-            "./src/server-app/src/db/migration/**/*.ts"
+            "./src/db/migration/**/*.ts"
         ],
         subscribers: [
-            "./src/server-app/src/db/subscriber/**/*.ts"
+            "./src/db/subscriber/**/*.ts"
         ],
         cli: {
-            "entitiesDir": "./src/server-app/src/db/entity",
-            "migrationsDir": "./src/server-app/src/db/migration",
-            "subscribersDir": "./src/server-app/src/db/subscriber"
+            "entitiesDir": "./src/db/entity",
+            "migrationsDir": "./src/db/migration",
+            "subscribersDir": "./src/db/subscriber"
         }
     }
 };

@@ -2,9 +2,9 @@
   "name": "passwordsaver",
   "version": "1.0.0",
   "description": "app for saving pasword",
-  "main": "server-app/index.js",
+  "main": "src/index.js",
   "scripts": {
-    "watch-server": "cross-env NODE_ENV=development nodemon --watch \"src/**/*\" -e ts,tsx --exec \"ts-node\" ./src/server-app/server.ts",
+    "watch-server": "cross-env NODE_ENV=development nodemon --watch \"src/**/*\" -e ts,tsx --exec \"ts-node\" ./src/server.ts",
     "build-server": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
