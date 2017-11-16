@@ -1,11 +1,13 @@
 import {PasswordType} from "../db/entity/PasswordType";
-import {getManager} from "typeorm";
+import {getManager, Repository} from "typeorm";
 
 export class PasswordTypeService {
+
+    private passwordTypeRepository: Repository<PasswordType> = getManager().getRepository(PasswordType);
+
     public async getAllPasswordTypes(): Promise<PasswordType[]> {
         try {
-            const passwordTypeRepository = getManager().getRepository(PasswordType);
-            return await passwordTypeRepository.find();
+            return await this.passwordTypeRepository.find();
         }catch(err) {
             console.log(err);
         }
@@ -13,8 +15,7 @@ export class PasswordTypeService {
 
     public async getPasswordTypeById(passwordTypeId: number): Promise<PasswordType> {
         try {
-            const passwordTypeRepository = getManager().getRepository(PasswordType);
-            return await passwordTypeRepository.findOneById(passwordTypeId);
+            return await this.passwordTypeRepository.findOneById(passwordTypeId);
         } catch (err) {
             console.log(err);
         }
@@ -22,9 +23,8 @@ export class PasswordTypeService {
 
     public async addPasswordType(newPasswordType: PasswordType): Promise<PasswordType> {
         try {
-            const passwordTypeRepository = getManager().getRepository(PasswordType);
-            const createPasswordType = passwordTypeRepository.create(newPasswordType);
-            return await passwordTypeRepository.save(createPasswordType);
+            const createPasswordType = this.passwordTypeRepository.create(newPasswordType);
+            return await this.passwordTypeRepository.save(createPasswordType);
         } catch (err) {
             console.log(err);
         }
@@ -32,10 +32,9 @@ export class PasswordTypeService {
 
     public async updatePasswordType(passwordTypeId: number, passwordType: PasswordType) {
         try {
-            const passwordTypeRepository = getManager().getRepository(PasswordType);
-            const oldPasswordType = await passwordTypeRepository.findOneById(passwordTypeId);
+            const oldPasswordType = await this.passwordTypeRepository.findOneById(passwordTypeId);
             const updatePasswordType = Object.assign(oldPasswordType, passwordType);
-            return await passwordTypeRepository.save(updatePasswordType);
+            return await this.passwordTypeRepository.save(updatePasswordType);
         } catch (err) {
             console.log(err);
         }
@@ -43,9 +42,8 @@ export class PasswordTypeService {
 
     public async deletePasswordType(passwordTypeId: number) {
         try {
-            const passwordTypeRepository = getManager().getRepository(PasswordType);
-            const deletePasswordType = await passwordTypeRepository.findOneById(passwordTypeId);
-            return await passwordTypeRepository.remove(deletePasswordType);
+            const deletePasswordType = await this.passwordTypeRepository.findOneById(passwordTypeId);
+            return await this.passwordTypeRepository.remove(deletePasswordType);
         } catch (err) {
             console.log(err);
         }

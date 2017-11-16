@@ -1,12 +1,13 @@
-import {getManager} from "typeorm";
+import {getManager, Repository} from "typeorm";
 import {Password} from "../db/entity/Password";
 
 export class PasswordService {
 
+    private passwordRepository: Repository<Password> = getManager().getRepository(Password);
+
     public async getAllPasswords(): Promise<Password[]> {
         try {
-            const passwordRepository = getManager().getRepository(Password);
-            return await passwordRepository.find();
+            return await this.passwordRepository.find();
         }catch(err) {
             console.log(err);
         }
@@ -14,8 +15,7 @@ export class PasswordService {
 
     public async getPasswordsByProjectId(projectId: number): Promise<Password[]> {
         try {
-            const passwordRepository = getManager().getRepository(Password);
-            return await passwordRepository.find({project: {id: projectId}});
+            return await this.passwordRepository.find({project: {id: projectId}});
         } catch (err) {
             console.log(err);
         }
@@ -23,9 +23,8 @@ export class PasswordService {
 
     public async addPassword(newPassword: Password): Promise<Password> {
         try {
-            const passwordRepository = getManager().getRepository(Password);
-            const createPassword = passwordRepository.create(newPassword);
-            return await passwordRepository.save(createPassword);
+            const createPassword = this.passwordRepository.create(newPassword);
+            return await this.passwordRepository.save(createPassword);
         } catch (err) {
             console.log(err);
         }
@@ -33,10 +32,9 @@ export class PasswordService {
 
     public async updatePassword(passwordId: number, password: Password) {
         try {
-            const passwordRepository = getManager().getRepository(Password);
-            const oldPassword = await passwordRepository.findOneById(passwordId);
+            const oldPassword = await this.passwordRepository.findOneById(passwordId);
             const updatePassword = Object.assign(oldPassword, password);
-            return await passwordRepository.save(updatePassword);
+            return await this.passwordRepository.save(updatePassword);
         } catch (err) {
             console.log(err);
         }
@@ -44,9 +42,8 @@ export class PasswordService {
 
     public async deletePassword(passwordId: number) {
         try {
-            const passwordRepository = getManager().getRepository(Password);
-            const deletePassword = await passwordRepository.findOneById(passwordId);
-            return await passwordRepository.remove(deletePassword);
+            const deletePassword = await this.passwordRepository.findOneById(passwordId);
+            return await this.passwordRepository.remove(deletePassword);
         } catch (err) {
             console.log(err);
         }
