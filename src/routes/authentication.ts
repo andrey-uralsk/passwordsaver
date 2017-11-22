@@ -17,9 +17,15 @@ router.post(`${AUTH_URL}/login`, async (ctx) => {
                 message:"no such user found"
             };
         }
+        if(!user.isActive) {
+            ctx.status = 401;
+            ctx.body = {
+                message:"you banned"
+            };
+        }
         if(user.password === authUser.password) {
             const payload = {id: user.id};
-            const token = jwt.sign(payload, config.jwtOptions.secretOrKey);
+            const token = jwt.sign(payload, config.jwtOptions.secretOrKey, config.tokenOption);
             ctx.body = {
                 status: "succes",
                 token: token

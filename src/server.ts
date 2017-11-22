@@ -6,7 +6,7 @@ import { config } from "./config/config";
 import { privateRoutes, publicRoutes } from './middleware/routes';
 import { logger } from "./middleware/logger";
 import * as passport from "koa-passport";
-import {passportJwt} from "./services/AuthService";
+import {passportJwt} from "./authentication/passportJwt";
 
 createConnection(config.dbConnection).then(async () => {
     const app = new Koa();

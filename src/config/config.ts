@@ -2,7 +2,6 @@ import {PostgresConnectionOptions} from "typeorm/driver/postgres/PostgresConnect
 import {StrategyOptions} from "passport-jwt";
 import * as PassportJwt from "passport-jwt";
 import {SignOptions} from "jsonwebtoken";
-
 const ExtractJwt = PassportJwt.ExtractJwt;
 
 export interface IConfig {
@@ -21,7 +20,7 @@ const config: IConfig = {
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     },
     tokenOption: {
-        expiresIn: "1m",
+        expiresIn: "12h",
     },
     dbConnection: {
         type: "postgres",
