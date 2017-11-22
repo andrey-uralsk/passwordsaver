@@ -1,14 +1,28 @@
 import {PostgresConnectionOptions} from "typeorm/driver/postgres/PostgresConnectionOptions";
+import {StrategyOptions} from "passport-jwt";
+import * as PassportJwt from "passport-jwt";
+import {SignOptions} from "jsonwebtoken";
+
+const ExtractJwt = PassportJwt.ExtractJwt;
 
 export interface IConfig {
     port: number | string;
     prettyLog: boolean;
-    dbConnection: PostgresConnectionOptions
+    jwtOptions: StrategyOptions;
+    tokenOption: SignOptions;
+    dbConnection: PostgresConnectionOptions;
 }
 
 const config: IConfig = {
     port: process.env.NODE_PORT || 3000,
     prettyLog: process.env.NODE_ENV == 'development',
+    jwtOptions: {
+        secretOrKey: "secret",
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    },
+    tokenOption: {
+        expiresIn: "1m",
+    },
     dbConnection: {
         type: "postgres",
         host: "localhost",

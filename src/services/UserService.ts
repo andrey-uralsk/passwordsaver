@@ -12,9 +12,17 @@ export class UserService {
         }
     }
 
+    public async getUserById(userId: number): Promise<User> {
+        try {
+            return await this.userRepository.findOneById(userId);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     public async getUserByEmail(userEmail: string): Promise<User> {
         try {
-            return await this.userRepository.findOne({email: userEmail});
+            return await this.userRepository.findOne({email : userEmail});
         } catch (err) {
             console.log(err);
         }

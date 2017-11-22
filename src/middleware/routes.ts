@@ -3,14 +3,18 @@ import * as Router from 'koa-router';
 import {projectsRoutes} from "../routes/projects";
 import {passwordsRoutes} from "../routes/passwords";
 import {passwordTypesRoutes} from "../routes/passwordTypes";
+import {authRouter} from "../routes/authentication";
 
-const router = new Router();
-router.use(projectsRoutes);
-router.use(passwordsRoutes);
-router.use(passwordTypesRoutes);
+const privateRouter = new Router();
+privateRouter.use(projectsRoutes);
+privateRouter.use(passwordsRoutes);
+privateRouter.use(passwordTypesRoutes);
+const publicRouter = new Router();
+publicRouter.use(authRouter);
 
-router.get('/', async (ctx) => {
+publicRouter.get('/', async (ctx) => {
     ctx.body = `Hello api!`;
 });
 
-export const routes = router.routes();
+export const privateRoutes = privateRouter.routes();
+export const publicRoutes = publicRouter.routes();
