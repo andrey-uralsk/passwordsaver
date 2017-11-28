@@ -1,12 +1,12 @@
 import * as Router from 'koa-router';
-import {UserService} from "../services/UserService";
+import {UserService} from "../../services/UserService";
 import * as jwt from "jsonwebtoken";
-import {config} from "../config/config";
+import {config} from "../../config/config";
 
 const router = new Router();
-const AUTH_URL = `/auth`;
+const LOGIN_URL = `/api/login`;
 
-router.post(`${AUTH_URL}/login`, async (ctx) => {
+router.post(`${LOGIN_URL}`, async (ctx) => {
     const authUser = ctx.request.body;
     if(authUser.email && authUser.password) {
         const userService = new UserService();
@@ -27,7 +27,7 @@ router.post(`${AUTH_URL}/login`, async (ctx) => {
             const payload = {id: user.id};
             const token = jwt.sign(payload, config.jwtOptions.secretOrKey, config.tokenOption);
             ctx.body = {
-                status: "succes",
+                status: "success",
                 token: token
             }
         } else {
@@ -40,4 +40,4 @@ router.post(`${AUTH_URL}/login`, async (ctx) => {
     }
 });
 
-export const authRouter = router.routes();
+export const loginRouter = router.routes();
