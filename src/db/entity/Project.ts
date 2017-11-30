@@ -10,6 +10,11 @@ export class Project {
     @Column()
     name: string;
 
+    @Column({
+        type: "text"
+    })
+    description: string;
+
     @OneToMany(type => Password, password => password.project)
     passwords: Password[];
 }
