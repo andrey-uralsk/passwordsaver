@@ -7,32 +7,18 @@ const PASSWORDS_TYPES_URL = `/api/passwordTypes`;
 router.get(PASSWORDS_TYPES_URL, async (ctx) => {
     try {
         const passwordTypeService = new PasswordTypeService();
-        const passwordType = await passwordTypeService.getAllPasswordTypes();
-        ctx.body = {
-            status: 'success',
-            data: passwordType
-        };
-    } catch (err) {
-        console.log(err);
-    }
-});
-
-router.get(`${PASSWORDS_TYPES_URL}/:passwordTypesId`, async (ctx) => {
-    try {
-        const passwordTypeService = new PasswordTypeService();
-        const passwordType = await passwordTypeService.getPasswordTypeById(ctx.params.id);
-        if (passwordType) {
+        if(ctx.request.query.id) {
+            let passwordType = await passwordTypeService.getPasswordTypeById(ctx.request.query.id);
             ctx.body = {
-                status: 'success',
                 data: passwordType
             };
         } else {
-            ctx.status = 404;
+            const passwordTypes = await passwordTypeService.getAllPasswordTypes();
             ctx.body = {
-                status: "error",
-                data: "Project not found"
-            }
+                data: passwordTypes
+            };
         }
+        ctx.body.status = 'success';
     } catch (err) {
         console.log(err);
     }
@@ -64,10 +50,10 @@ router.post(PASSWORDS_TYPES_URL, async (ctx) => {
     }
 });
 
-router.put(`${PASSWORDS_TYPES_URL}/:passwordTypesId`, async (ctx) => {
+router.put(PASSWORDS_TYPES_URL, async (ctx) => {
     try {
         const passwordTypeService = new PasswordTypeService();
-        const updatePasswordType = await passwordTypeService.updatePasswordType(ctx.params.id, ctx.request.body);
+        const updatePasswordType = await passwordTypeService.updatePasswordType(ctx.request.body.id, ctx.request.body);
         if(updatePasswordType) {
             ctx.status = 200;
             ctx.body = {
@@ -90,10 +76,10 @@ router.put(`${PASSWORDS_TYPES_URL}/:passwordTypesId`, async (ctx) => {
     }
 });
 
-router.delete(`${PASSWORDS_TYPES_URL}/:passwordTypesId`, async (ctx) => {
+router.delete(PASSWORDS_TYPES_URL, async (ctx) => {
     try {
         const passwordTypeService = new PasswordTypeService();
-        const deletedPasswordType = await passwordTypeService.deletePasswordType(ctx.params.id);
+        const deletedPasswordType = await passwordTypeService.deletePasswordType(ctx.request.body.id);
         if(deletedPasswordType) {
             ctx.status = 200;
             ctx.body = {

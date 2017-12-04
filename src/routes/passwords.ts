@@ -23,27 +23,6 @@ router.get(PASSWORDS_URL, async (ctx) => {
     }
 });
 
-router.get(`${PASSWORDS_URL}/:projectId`, async (ctx) => {
-    try {
-        const passwordService = new PasswordService();
-        const passwords = await passwordService.getPasswordsByProjectId(ctx.params.projectId);
-        if (passwords) {
-            ctx.body = {
-                status: 'success',
-                data: passwords
-            };
-        } else {
-            ctx.status = 404;
-            ctx.body = {
-                status: "error",
-                data: "Passwords not found"
-            }
-        }
-    } catch (err) {
-        console.log(err);
-    }
-});
-
 router.post(PASSWORDS_URL, async (ctx) => {
     try {
         const passwordService = new PasswordService();
@@ -70,10 +49,10 @@ router.post(PASSWORDS_URL, async (ctx) => {
     }
 });
 
-router.put(`${PASSWORDS_URL}/:id`, async (ctx) => {
+router.put(PASSWORDS_URL, async (ctx) => {
     try {
         const passwordService = new PasswordService();
-        let updatePassword = await passwordService.updatePassword(ctx.params.id, ctx.request.body);
+        let updatePassword = await passwordService.updatePassword(ctx.request.body.id, ctx.request.body);
         if(updatePassword) {
             ctx.status = 200;
             ctx.body = {
@@ -96,10 +75,10 @@ router.put(`${PASSWORDS_URL}/:id`, async (ctx) => {
     }
 });
 
-router.delete(`${PASSWORDS_URL}/:id`, async (ctx) => {
+router.delete(PASSWORDS_URL, async (ctx) => {
     try {
         const passwordService = new PasswordService();
-        const deletedPassword = await passwordService.deletePassword(ctx.params.id);
+        const deletedPassword = await passwordService.deletePassword(ctx.request.body.id);
         if(deletedPassword) {
             ctx.status = 200;
             ctx.body = {

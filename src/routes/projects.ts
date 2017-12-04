@@ -7,32 +7,19 @@ const PROJECTS_URL = `/api/projects`;
 router.get(PROJECTS_URL, async (ctx) => {
     try {
         const projectService = new ProjectService();
-        const projects = await projectService.getAllProjects();
-        ctx.body = {
-            status: 'success',
-            data: projects
-        };
-    } catch (err) {
-        console.log(err);
-    }
-});
-
-router.get(`${PROJECTS_URL}/:id`, async (ctx) => {
-    try {
-        const projectService = new ProjectService();
-        const project = await projectService.getProjectById(ctx.params.id);
-        if (project) {
+        if(ctx.request.query.id) {
+            const project = await projectService.getProjectById(ctx.request.query.id);
             ctx.body = {
-                status: 'success',
                 data: project
             };
         } else {
-            ctx.status = 404;
+            const projects = await projectService.getAllProjects();
             ctx.body = {
-                status: "error",
-                data: "Project not found"
-            }
+                data: projects
+            };
         }
+        ctx.body.status = 'success';
+
     } catch (err) {
         console.log(err);
     }
@@ -64,10 +51,10 @@ router.post(PROJECTS_URL, async (ctx) => {
     }
 });
 
-router.put(`${PROJECTS_URL}/:id`, async (ctx) => {
+router.put(PROJECTS_URL, async (ctx) => {
     try {
         const projectService = new ProjectService();
-        const updateProject = await projectService.updateProject(ctx.params.id, ctx.request.body);
+        const updateProject = await projectService.updateProject(ctx.request.body.id, ctx.request.body);
         if(updateProject) {
             ctx.status = 200;
             ctx.body = {
@@ -90,10 +77,10 @@ router.put(`${PROJECTS_URL}/:id`, async (ctx) => {
     }
 });
 
-router.delete(`${PROJECTS_URL}/:id`, async (ctx) => {
+router.delete(PROJECTS_URL, async (ctx) => {
     try {
         const projectService = new ProjectService();
-        const deletedProject = await projectService.deleteProject(ctx.params.id);
+        const deletedProject = await projectService.deleteProject(ctx.request.body.id);
         if(deletedProject) {
             ctx.status = 200;
             ctx.body = {
