@@ -1,5 +1,6 @@
 import * as Router from 'koa-router';
 import {PasswordService} from "../services/PasswordService";
+import {Password} from "../db/entity/Password";
 
 const router = new Router();
 const PASSWORDS_URL = `/api/passwords`;
@@ -7,7 +8,12 @@ const PASSWORDS_URL = `/api/passwords`;
 router.get(PASSWORDS_URL, async (ctx) => {
     try {
         const passwordService = new PasswordService();
-        const passwords = await passwordService.getAllPasswords();
+        let passwords: Password[] = [];
+        if(ctx.request.query.projectId) {
+            passwords = await passwordService.getPasswordsByProjectId(ctx.request.query.projectId);
+        } else {
+            passwords = await passwordService.getAllPasswords();
+        }
         ctx.body = {
             status: 'success',
             data: passwords
