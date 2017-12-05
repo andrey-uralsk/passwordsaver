@@ -2,6 +2,8 @@ import * as Router from 'koa-router';
 import {UserService} from "../../services/UserService";
 import * as jwt from "jsonwebtoken";
 import {config} from "../../config/config";
+import * as bcrypt from 'bcrypt';
+
 
 const router = new Router();
 const LOGIN_URL = `/api/login`;
@@ -23,7 +25,7 @@ router.post(`${LOGIN_URL}`, async (ctx) => {
                 message:"you banned"
             };
         }
-        if(user.password === authUser.password) {
+        if(await bcrypt.compare(authUser.password, user.password)) {
             const payload = {id: user.id};
             const token = jwt.sign(payload, config.jwtOptions.secretOrKey, config.tokenOption);
             ctx.body = {

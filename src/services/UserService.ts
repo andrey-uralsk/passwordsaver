@@ -1,5 +1,6 @@
 import {getManager, Repository} from "typeorm";
 import {User} from "../db/entity/User";
+import * as bcrypt from 'bcrypt';
 
 export class UserService {
     private userRepository: Repository<User> = getManager().getRepository(User);
@@ -30,6 +31,8 @@ export class UserService {
 
     public async addUser(newUser: User): Promise<User> {
         try {
+            const salt = await bcrypt.genSalt(8);
+            newUser.password = await bcrypt.hash(newUser.password, salt);
             const createUser = this.userRepository.create(newUser);
             return await this.userRepository.save(createUser);
         } catch (err) {
