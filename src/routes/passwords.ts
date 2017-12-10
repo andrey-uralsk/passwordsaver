@@ -26,7 +26,7 @@ router.get(PASSWORDS_URL, async (ctx) => {
 router.post(PASSWORDS_URL, async (ctx) => {
     try {
         const passwordService = new PasswordService();
-        const newPassword = passwordService.addPassword(ctx.request.body);
+        const newPassword = await passwordService.addPassword(ctx.request.body);
         if(newPassword) {
             ctx.status = 201;
             ctx.body = {
@@ -78,7 +78,7 @@ router.put(PASSWORDS_URL, async (ctx) => {
 router.delete(PASSWORDS_URL, async (ctx) => {
     try {
         const passwordService = new PasswordService();
-        const deletedPassword = await passwordService.deletePassword(ctx.request.body.id);
+        const deletedPassword = await passwordService.deletePassword(ctx.request.query.id);
         if(deletedPassword) {
             ctx.status = 200;
             ctx.body = {

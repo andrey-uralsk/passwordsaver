@@ -27,7 +27,7 @@ router.get(PASSWORDS_TYPES_URL, async (ctx) => {
 router.post(PASSWORDS_TYPES_URL, async (ctx) => {
     try {
         const passwordTypeService = new PasswordTypeService();
-        const passwordType = passwordTypeService.addPasswordType(ctx.request.body);
+        const passwordType = await passwordTypeService.addPasswordType(ctx.request.body);
         if(passwordType) {
             ctx.status = 201;
             ctx.body = {
@@ -79,7 +79,7 @@ router.put(PASSWORDS_TYPES_URL, async (ctx) => {
 router.delete(PASSWORDS_TYPES_URL, async (ctx) => {
     try {
         const passwordTypeService = new PasswordTypeService();
-        const deletedPasswordType = await passwordTypeService.deletePasswordType(ctx.request.body.id);
+        const deletedPasswordType = await passwordTypeService.deletePasswordType(ctx.request.query.id);
         if(deletedPasswordType) {
             ctx.status = 200;
             ctx.body = {

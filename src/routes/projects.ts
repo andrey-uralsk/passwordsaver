@@ -28,7 +28,7 @@ router.get(PROJECTS_URL, async (ctx) => {
 router.post(PROJECTS_URL, async (ctx) => {
     try {
         const projectService = new ProjectService();
-        const newProject = projectService.addProject(ctx.request.body);
+        const newProject = await projectService.addProject(ctx.request.body);
         if(newProject) {
             ctx.status = 201;
             ctx.body = {
@@ -80,7 +80,7 @@ router.put(PROJECTS_URL, async (ctx) => {
 router.delete(PROJECTS_URL, async (ctx) => {
     try {
         const projectService = new ProjectService();
-        const deletedProject = await projectService.deleteProject(ctx.request.body.id);
+        const deletedProject = await projectService.deleteProject(ctx.request.query.id);
         if(deletedProject) {
             ctx.status = 200;
             ctx.body = {
