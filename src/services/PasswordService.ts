@@ -15,7 +15,7 @@ export class PasswordService {
 
     public async getPasswordsByProjectId(projectId: number): Promise<Password[]> {
         try {
-            return await this.passwordRepository.find({where: {project: {id: projectId}}, relations: ['passwordType']});
+            return await this.passwordRepository.find({where: {project: projectId}, relations: ['passwordType']});
         } catch (err) {
             console.log(err);
         }
